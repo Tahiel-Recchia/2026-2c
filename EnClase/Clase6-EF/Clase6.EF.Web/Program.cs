@@ -1,6 +1,7 @@
 using System;
 using Clase6.EF.Entidades;
 using Clase6.EF.Logica;
+using Clase6.EF.Repositorios;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IJuguetesLogica, JuguetesLogica>();
 builder.Services.AddScoped<ITematicaLogica, TematicaLogica>();
 builder.Services.AddScoped<ISucursalLogica, SucursalLogica>();
+builder.Services.AddHttpClient<IGutendexLogica, GutendexLogica>();
+builder.Services.AddScoped<IPaginasLogica, PaginasLogica>();
+builder.Services.AddScoped<ILibroRepositorio, LibroRepositorio>();
+builder.Services.AddScoped<ILibroLogica, LibroLogica>();
 
 //add JugueteriaDbContext
 builder.Services.AddDbContext<JugueteriaDbContext>();

@@ -21,6 +21,23 @@ namespace Clase6.EF.Entidades.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Clase6.EF.Entidades.Categoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categorias");
+                });
+
             modelBuilder.Entity("Clase6.EF.Entidades.Juguete", b =>
                 {
                     b.Property<int>("Id")
@@ -47,6 +64,60 @@ namespace Clase6.EF.Entidades.Migrations
                     b.HasIndex("TematicaId");
 
                     b.ToTable("Juguetes");
+                });
+
+            modelBuilder.Entity("Clase6.EF.Entidades.Libro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnioPublicacion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Autor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.ToTable("Libros");
+                });
+
+            modelBuilder.Entity("Clase6.EF.Entidades.Pagina", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Contenido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Numero")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LibroId");
+
+                    b.ToTable("Paginas");
                 });
 
             modelBuilder.Entity("Clase6.EF.Entidades.Sucursal", b =>
@@ -91,6 +162,23 @@ namespace Clase6.EF.Entidades.Migrations
                     b.ToTable("Tematicas");
                 });
 
+            modelBuilder.Entity("Clase6.EF.Entidades.TematicaLibro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TematicasLibro");
+                });
+
             modelBuilder.Entity("JugueteSucursal", b =>
                 {
                     b.Property<int>("JuguetesId")
@@ -106,6 +194,21 @@ namespace Clase6.EF.Entidades.Migrations
                     b.ToTable("JugueteSucursal");
                 });
 
+            modelBuilder.Entity("LibroTematicaLibro", b =>
+                {
+                    b.Property<int>("LibrosId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TematicasId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LibrosId", "TematicasId");
+
+                    b.HasIndex("TematicasId");
+
+                    b.ToTable("LibroTematicaLibro");
+                });
+
             modelBuilder.Entity("Clase6.EF.Entidades.Juguete", b =>
                 {
                     b.HasOne("Clase6.EF.Entidades.Tematica", "Tematica")
@@ -115,6 +218,24 @@ namespace Clase6.EF.Entidades.Migrations
                         .IsRequired();
 
                     b.Navigation("Tematica");
+                });
+
+            modelBuilder.Entity("Clase6.EF.Entidades.Libro", b =>
+                {
+                    b.HasOne("Clase6.EF.Entidades.Categoria", null)
+                        .WithMany("libros")
+                        .HasForeignKey("CategoriaId");
+                });
+
+            modelBuilder.Entity("Clase6.EF.Entidades.Pagina", b =>
+                {
+                    b.HasOne("Clase6.EF.Entidades.Libro", "Libro")
+                        .WithMany("Paginas")
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Libro");
                 });
 
             modelBuilder.Entity("JugueteSucursal", b =>
@@ -130,6 +251,31 @@ namespace Clase6.EF.Entidades.Migrations
                         .HasForeignKey("SucursalesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LibroTematicaLibro", b =>
+                {
+                    b.HasOne("Clase6.EF.Entidades.Libro", null)
+                        .WithMany()
+                        .HasForeignKey("LibrosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Clase6.EF.Entidades.TematicaLibro", null)
+                        .WithMany()
+                        .HasForeignKey("TematicasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Clase6.EF.Entidades.Categoria", b =>
+                {
+                    b.Navigation("libros");
+                });
+
+            modelBuilder.Entity("Clase6.EF.Entidades.Libro", b =>
+                {
+                    b.Navigation("Paginas");
                 });
 
             modelBuilder.Entity("Clase6.EF.Entidades.Tematica", b =>
